@@ -1,0 +1,4 @@
+package com.example.shopcore.exception;
+
+public class BusinessException {
+}

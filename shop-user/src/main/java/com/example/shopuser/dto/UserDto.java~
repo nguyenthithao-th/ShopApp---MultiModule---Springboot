@@ -1,0 +1,4 @@
+package com.example.shopuser.dto;
+
+public class UserDto {
+}

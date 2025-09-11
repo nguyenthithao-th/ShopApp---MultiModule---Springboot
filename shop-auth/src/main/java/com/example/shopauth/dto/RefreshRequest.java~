@@ -1,0 +1,4 @@
+package com.example.shopauth.dto;
+
+public class RefreshRequest {
+}

@@ -1,0 +1,4 @@
+package com.example.shopproduct.filter;
+
+public class ProductSpecification {
+}

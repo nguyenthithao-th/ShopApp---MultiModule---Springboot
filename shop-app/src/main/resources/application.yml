@@ -1,0 +1,37 @@
+spring:
+  application:
+    name: shop-app
+
+  datasource:
+    url: jdbc:h2:file:./data/shopvuidb
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+
+  jpa:
+    hibernate:
+      ddl-auto: update   # update schema tự động theo entity
+    show-sql: true        # log SQL để debug
+    properties:
+      hibernate:
+        format_sql: true
+
+  h2:
+    console:
+      enabled: true
+      path: /h2-console   # mở tại http://localhost:8080/h2-console
+      settings:
+        web-allow-others: true
+
+  data:
+    redis:
+      host: localhost
+      port: 6379
+app:
+  jwt:
+    secret: zPCROfzZidOqs+gnDqgH/Nzoq2k+mjad6vVMwwoLOHERPZUww7KS6QB3TB5qOhUc8ZbmrXAfF5ptrJmahbQlJg==
+    access-ms: 900000
+    refresh-ms: 604800000
+logging:
+  level:
+    org.springframework.security: DEBUG

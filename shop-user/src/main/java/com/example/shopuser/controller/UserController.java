@@ -1,0 +1,45 @@
+package com.example.shopuser.controller;
+
+import com.example.shopcore.dto.ApiResponse;
+import com.example.shopuser.dto.UserDto;
+import com.example.shopuser.service.UserService;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/api/users")
+@RequiredArgsConstructor
+public class UserController {
+
+    private final UserService userService;
+
+    @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
+    public ApiResponse<UserDto> createUser(@Valid @RequestBody UserDto dto) {
+        return userService.createUser(dto);
+    }
+
+    @GetMapping
+    @PreAuthorize("hasRole('ADMIN')")
+    public ApiResponse<List<UserDto>> getAllUsers() {
+        return userService.getAllUsers();
+    }
+
+    @GetMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ApiResponse<UserDto> getUser(@PathVariable("id") Long id) {
+        return userService.getUser(id);
+    }
+
+
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ApiResponse<Void> deleteUser(@PathVariable("id") Long id) {
+        return userService.deleteUser(id);
+    }
+
+}
