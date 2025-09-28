@@ -9,7 +9,6 @@ import com.example.shoppayment.event.PaymentCompletedEvent;
 import com.example.shoppayment.repository.PaymentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,7 +19,6 @@ import java.math.BigDecimal;
 public class PaymentService {
 
     private final PaymentRepository paymentRepository;
-    // TODO: inject OrderServiceClient để gọi sang order (nếu muốn)
 
     private final RabbitTemplate rabbitTemplate;
 
@@ -50,23 +48,6 @@ public class PaymentService {
         paymentRepository.save(payment);
         return ApiResponse.ok(toDto(payment));
     }
-
-//    @Transactional
-//    public ApiResponse<Void> completePayment(Long paymentId, boolean success) {
-//        Payment payment = paymentRepository.findById(paymentId)
-//                .orElseThrow(() -> new RuntimeException("Payment not found"));
-//
-//        if (success) {
-//            payment.setStatus(PaymentStatus.SUCCESS);
-//            // TODO: call orderServiceClient.markAsPaid(payment.getOrderId());
-//        } else {
-//            payment.setStatus(PaymentStatus.FAILED);
-//            // TODO: call orderServiceClient.cancelOrder(payment.getOrderId());
-//        }
-//
-//        paymentRepository.save(payment);
-//        return ApiResponse.ok(null);
-//    }
 
     private PaymentDto toDto(Payment p) {
         return PaymentDto.builder()

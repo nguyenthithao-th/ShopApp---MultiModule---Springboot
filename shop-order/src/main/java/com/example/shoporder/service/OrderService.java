@@ -27,8 +27,6 @@ public class OrderService {
     private final InventoryService inventoryService; // từ shop-inventory
     private final RabbitTemplate rabbitTemplate;
 
-    // Luu y quan trong, khi inject module khac thi nho them scanBasePackages
-
     @Transactional
     public ApiResponse<OrderDto> createOrder(CreateOrderRequest req, Long userId) {
         Order order = Order.builder()
