@@ -4,6 +4,9 @@ public enum OrderStatus {
     PENDING,     // mới tạo
     PAID,        // đã thanh toán
     CANCELLED,   // huỷ
-    COMPLETED    // hoàn tất (giao hàng xong)
+    COMPLETED  ,// hoàn tất (giao hàng xong)
+    CONFIRMED,
+    REJECTED,
+    PENDING_VERIFICATION
 }
 

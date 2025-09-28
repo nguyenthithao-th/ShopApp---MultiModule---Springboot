@@ -3,7 +3,9 @@ package com.example.shoporder;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-@SpringBootApplication(scanBasePackages = "com.example.shopinventory")
+
+@SpringBootApplication(scanBasePackages = "com.example")
+
 public class ShopOrderApplication {
 
     public static void main(String[] args) {
