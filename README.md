@@ -1,6 +1,10 @@
 
 # Shop Application (Multi-Module Project)
 
+![status](https://img.shields.io/badge/status-in%20progress-yellow)
+
+> 🚧 This project is still under development. Features may change frequently.
+
 ## Overview
 
 This project is a **multi-module backend application** built with **Java** and **Spring Boot**.
