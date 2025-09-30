@@ -24,19 +24,11 @@ public class CustomUserDetails implements UserDetails{
     private boolean enabled;
 
 
-//    Trả danh sách quyền (role) ở dạng SimpleGrantedAuthority, ví dụ: ROLE_USER, ROLE_ADMIN.
-    //Tác dụng: Dùng ở bước uỷ quyền (authorize).
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return authorities;
     }
-//=============================================================================================
-//    4 cờ trạng thái tài khoản.
 
-//    Tác dụng: Nếu bất kỳ cờ nào false, quá trình authenticate/authorize có thể bị từ chối.
-
-//    Trong code của bạn, các cờ trả true (tức user hoạt động bình thường).
-//    Nếu sau này cần khoá tài khoản thì set false.
     @Override
     public boolean isAccountNonExpired() {
         return accountNonExpired;

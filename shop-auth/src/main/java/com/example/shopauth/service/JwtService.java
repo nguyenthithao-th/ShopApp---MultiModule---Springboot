@@ -22,7 +22,6 @@ public class JwtService {
 
     private final SecretKey secretKey;
     private final long accessTokenMs;
-    // Getter cho refresh token TTL
     @Getter
     private final long refreshTokenMs;
 
@@ -69,14 +68,10 @@ public class JwtService {
         // Lấy claim "roles" từ payload trong JWT (có thể là bất cứ kiểu gì → Object)
         Object raw = parseClaims(token).get("roles");
 
-        // Kiểm tra nếu raw thực sự là một List (danh sách)
-        // List<?> nghĩa là "List chứa phần tử kiểu bất kỳ" (chưa biết rõ kiểu bên trong)
         if (raw instanceof List<?> rawList) {
-            // Duyệt qua từng phần tử trong List (mỗi phần tử có thể là Object)
-            // map(Object::toString) → ép từng phần tử thành chuỗi (String)
             return rawList.stream()
                     .map(Object::toString)
-                    .toList(); // Trả về List<String> cuối cùng
+                    .toList();
         }
 
         // Nếu claim "roles" không tồn tại hoặc không phải List → trả về List rỗng

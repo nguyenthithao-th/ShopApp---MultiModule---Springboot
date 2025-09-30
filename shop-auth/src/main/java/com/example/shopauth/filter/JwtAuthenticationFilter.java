@@ -41,14 +41,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         if (jwt != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             try {
-                System.out.println(">>> JWT received: " + jwt);
+//                System.out.println(">>> JWT received: " + jwt);
 
                 String username = jwtService.extractUsername(jwt);
                 Long userId = jwtService.extractUserId(jwt); //phải có extractId()
                 String email = jwtService.extractEmail(jwt); // cần implement extractEmail()
                 List<String> roles = jwtService.extractRoles(jwt);
 
-                System.out.println(">>> Extracted username=" + username + ", userId=" + userId + ", email=" + email + ", roles=" + roles);
+//                System.out.println(">>> Extracted username=" + username + ", userId=" + userId + ", email=" + email + ", roles=" + roles);
 
                 if (username != null && userId != null) {
                     List<SimpleGrantedAuthority> authorities = roles.stream()
@@ -67,7 +67,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     );
 
                     boolean valid = jwtService.isTokenValid(jwt, userDetails);
-                    System.out.println(">>> Token validation result: " + valid);
+//                    System.out.println(">>> Token validation result: " + valid);
 
                     if (valid) {
                         UsernamePasswordAuthenticationToken authToken =
@@ -75,8 +75,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                         authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                         SecurityContextHolder.getContext().setAuthentication(authToken);
 
-                        System.out.println(">>> Authentication set in SecurityContext: " + username
-                                + " with roles " + authorities);
+//                        System.out.println(">>> Authentication set in SecurityContext: " + username
+//                                + " with roles " + authorities);
                     } else {
                         System.out.println(">>> Token INVALID, skipping authentication.");
                     }
@@ -85,7 +85,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 }
 
             } catch (Exception e) {
-                System.out.println(">>> Exception while processing JWT: " + e.getMessage());
+//                System.out.println(">>> Exception while processing JWT: " + e.getMessage());
                 e.printStackTrace();
             }
         } else if (jwt == null) {
