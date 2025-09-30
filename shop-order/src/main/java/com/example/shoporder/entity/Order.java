@@ -5,6 +5,7 @@ import com.example.shopcore.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,7 +14,6 @@ import java.util.List;
 @Getter @Setter
 @NoArgsConstructor @AllArgsConstructor @Builder
 public class Order extends BaseEntity {
-
 
     private Long userId; // tham chiếu sang shop-user
 
@@ -24,5 +24,10 @@ public class Order extends BaseEntity {
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
     private List<OrderItem> items = new ArrayList<>();
+
+
+    @Column(precision = 19, scale = 2)
+    private BigDecimal totalPrice = BigDecimal.ZERO;
+
 }
 

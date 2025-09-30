@@ -14,6 +14,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -27,6 +28,22 @@ public class OrderService {
     private final InventoryService inventoryService; // từ shop-inventory
     private final RabbitTemplate rabbitTemplate;
 
+
+    private OrderDto toDto(Order order) {
+        return OrderDto.builder()
+                .id(order.getId())
+                .userId(order.getUserId())
+                .status(order.getStatus())
+                .items(order.getItems().stream().map(i ->
+                        OrderItemDto.builder()
+                                .variantId(i.getVariantId())
+                                .quantity(i.getQuantity())
+                                .price(i.getPrice())
+                                .build()
+                ).collect(Collectors.toList()))
+                .build();
+    }
+
     @Transactional
     public ApiResponse<OrderDto> createOrder(CreateOrderRequest req, Long userId) {
         Order order = Order.builder()
@@ -35,36 +52,37 @@ public class OrderService {
                 .build();
 
         List<OrderItemEvent> itemEvents = new ArrayList<>();
+        BigDecimal totalPrice = BigDecimal.ZERO;
 
         for (OrderItemDto itemDto : req.getItems()) {
-            // giảm stock tạm thời
             inventoryService.decreaseStock(itemDto.getVariantId(), itemDto.getQuantity());
 
             OrderItem item = OrderItem.builder()
                     .variantId(itemDto.getVariantId())
                     .quantity(itemDto.getQuantity())
-                    .price(itemDto.getPrice()) // client gửi, snapshot
+                    .price(itemDto.getPrice())
                     .order(order)
                     .build();
 
             order.getItems().add(item);
 
-            itemEvents.add(
-                    OrderItemEvent.builder()
-                            .variantId(itemDto.getVariantId())
-                            .quantity(itemDto.getQuantity())
-                            .price(itemDto.getPrice())
-                            .build()
-            );
+            totalPrice = totalPrice.add(item.getLineTotal());
+
+            itemEvents.add(OrderItemEvent.builder()
+                    .variantId(itemDto.getVariantId())
+                    .quantity(itemDto.getQuantity())
+                    .price(itemDto.getPrice())
+                    .build());
         }
 
+        order.setTotalPrice(totalPrice);
         orderRepository.save(order);
 
-        // publish event
+        // publish event kèm totalPrice
         rabbitTemplate.convertAndSend(
                 RabbitMQConfig.ORDER_EXCHANGE,
                 RabbitMQConfig.ORDER_CREATED_ROUTING_KEY,
-                new OrderCreatedEvent(order.getId(), itemEvents, userId)
+                new OrderCreatedEvent(order.getId(), itemEvents, userId, totalPrice)
         );
 
         return ApiResponse.ok(toDto(order));
@@ -128,19 +146,4 @@ public class OrderService {
         return ApiResponse.ok(null);
     }
 
-
-    private OrderDto toDto(Order order) {
-        return OrderDto.builder()
-                .id(order.getId())
-                .userId(order.getUserId())
-                .status(order.getStatus())
-                .items(order.getItems().stream().map(i ->
-                        OrderItemDto.builder()
-                                .variantId(i.getVariantId())
-                                .quantity(i.getQuantity())
-                                .price(i.getPrice())
-                                .build()
-                ).collect(Collectors.toList()))
-                .build();
-    }
 }

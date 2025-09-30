@@ -12,7 +12,6 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
 
 @Service
 @RequiredArgsConstructor
@@ -22,6 +21,30 @@ public class PaymentService {
 
     private final RabbitTemplate rabbitTemplate;
 
+    private PaymentDto toDto(Payment p) {
+        return PaymentDto.builder()
+                .id(p.getId())
+                .orderId(p.getOrderId())
+                .amount(p.getAmount())
+                .status(p.getStatus())
+                .build();
+    }
+
+//    @Transactional
+//    public ApiResponse<PaymentDto> createPayment(Long orderId, BigDecimal amount) {
+//        Payment payment = Payment.builder()
+//                .orderId(orderId)
+//                .amount(amount)
+//                .status(PaymentStatus.PENDING)
+//                .build();
+//        paymentRepository.save(payment);
+//        return ApiResponse.ok(toDto(payment));
+//    }
+//
+
+    /**
+     * FE gọi API complete khi user thanh toán xong
+     */
     @Transactional
     public ApiResponse<Void> completePayment(Long paymentId, boolean success) {
         Payment payment = paymentRepository.findById(paymentId)
@@ -31,30 +54,22 @@ public class PaymentService {
         paymentRepository.save(payment);
 
         // Gửi event sang order
-        rabbitTemplate.convertAndSend(RabbitMQConfig.SHOP_EXCHANGE, RabbitMQConfig.PAYMENT_COMPLETED_ROUTING_KEY,
+        rabbitTemplate.convertAndSend(
+                RabbitMQConfig.SHOP_EXCHANGE,
+                RabbitMQConfig.PAYMENT_COMPLETED_ROUTING_KEY,
                 new PaymentCompletedEvent(payment.getOrderId(), success));
 
         return ApiResponse.ok(null);
     }
 
-
-    @Transactional
-    public ApiResponse<PaymentDto> createPayment(Long orderId, BigDecimal amount) {
-        Payment payment = Payment.builder()
-                .orderId(orderId)
-                .amount(amount)
-                .status(PaymentStatus.PENDING)
-                .build();
-        paymentRepository.save(payment);
+    /**
+     * Optional: cho FE query lại payment info
+     */
+    @Transactional(readOnly = true)
+    public ApiResponse<PaymentDto> getPayment(Long paymentId) {
+        Payment payment = paymentRepository.findById(paymentId)
+                .orElseThrow(() -> new RuntimeException("Payment not found"));
         return ApiResponse.ok(toDto(payment));
     }
 
-    private PaymentDto toDto(Payment p) {
-        return PaymentDto.builder()
-                .id(p.getId())
-                .orderId(p.getOrderId())
-                .amount(p.getAmount())
-                .status(p.getStatus())
-                .build();
-    }
 }

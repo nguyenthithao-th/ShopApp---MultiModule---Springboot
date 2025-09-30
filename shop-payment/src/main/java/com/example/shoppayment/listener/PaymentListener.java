@@ -17,16 +17,16 @@ public class PaymentListener {
     private final PaymentRepository paymentRepository;
 
     @Transactional
-    @RabbitListener(queues = RabbitMQConfig.ORDER_CREATED_QUEUE)
+    @RabbitListener(queues = RabbitMQConfig.ORDER_CREATED_PAYMENT_QUEUE)
     public void handleOrderCreated(OrderCreatedEvent event) {
+
         Payment payment = Payment.builder()
                 .orderId(event.getOrderId())
-                .amount(event.getTotalPrice()) // 👈 dùng totalPrice từ event
+                .amount(event.getTotalPrice())
                 .status(PaymentStatus.PENDING)
                 .build();
 
         paymentRepository.save(payment);
-
-        // Nếu cần, publish thêm PaymentCreatedEvent ở đây
     }
 }
+

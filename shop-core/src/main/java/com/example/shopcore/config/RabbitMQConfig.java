@@ -27,6 +27,8 @@ public class RabbitMQConfig {
     public static final String PAYMENT_COMPLETED_QUEUE = "payment.completed.queue";
     public static final String PAYMENT_COMPLETED_ROUTING_KEY = "payment.completed";
 
+    public static final String ORDER_CREATED_PAYMENT_QUEUE = "order.created.payment.queue";
+
     @Bean
     public MessageConverter jsonMessageConverter() {
         return new Jackson2JsonMessageConverter();
@@ -97,5 +99,20 @@ public class RabbitMQConfig {
         return BindingBuilder.bind(paymentCompletedQueue())
                 .to(shopExchange()).with(PAYMENT_COMPLETED_ROUTING_KEY);
     }
+
+    @Bean
+    public Queue orderCreatedPaymentQueue() {
+        return new Queue("order.created.payment.queue", true);
+    }
+
+    @Bean
+    public Binding bindingOrderCreatedPayment(
+            @Qualifier("orderCreatedPaymentQueue")Queue orderCreatedPaymentQueue,
+            @Qualifier("orderExchange")DirectExchange orderExchange) {
+        return BindingBuilder.bind(orderCreatedPaymentQueue)
+                .to(orderExchange)
+                .with("order.created");
+    }
+
 
 }
