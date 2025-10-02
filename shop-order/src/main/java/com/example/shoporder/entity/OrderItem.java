@@ -21,8 +21,8 @@ public class OrderItem extends BaseEntity {
     @JoinColumn(name = "order_id")
     private Order order;
 
-// Field/method được đánh dấu @Transient chỉ tồn tại trong Java object, không được persist vào database.
-//    @Transient → field chỉ để dùng tạm trong logic Java, Hibernate bỏ qua.
+    // Field/method được đánh dấu @Transient chỉ tồn tại trong Java object, không được persist vào database.
+    //    @Transient → field chỉ để dùng tạm trong logic Java, Hibernate bỏ qua.
     @Transient
     public BigDecimal getLineTotal() {
         return price.multiply(BigDecimal.valueOf(quantity));

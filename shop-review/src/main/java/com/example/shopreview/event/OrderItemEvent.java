@@ -1,4 +1,4 @@
-package com.example.shoporder.event;
+package com.example.shopreview.event;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -46,6 +46,7 @@
         <module>shop-inventory</module>
         <module>shop-order</module>
         <module>shop-payment</module>
+        <module>shop-review</module>
 
     </modules>
 

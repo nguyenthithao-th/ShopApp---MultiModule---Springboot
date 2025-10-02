@@ -9,7 +9,7 @@
 
 This project is a **multi-module backend application** built with **Java** and **Spring Boot**.
 It simulates the backend of an e-commerce platform with modular separation of concerns.
-Each module handles a specific domain such as authentication, product management, ordering, payment, and inventory.
+Each module handles a specific domain such as authentication, product management, ordering, payment, review and inventory.
 
 The goal is to practice **modular monolith architecture**, **secure authentication/authorization**, and **event-driven communication** within a single project.
 
@@ -45,6 +45,11 @@ The goal is to practice **modular monolith architecture**, **secure authenticati
     * Cash on Delivery (COD) payment support
     * Updates order status after successful payment
 
+* **Review Module**
+
+  * Allows users to leave reviews on product variants
+  * Only users who have **ordered and paid** for a product variant can submit a review for it
+  
 * **Event-Driven Workflow (with RabbitMQ)**
 
     * Order module verifies product details via events with Product module
@@ -64,6 +69,7 @@ shop/
 ├── shop-order/        # Order lifecycle and status management
 ├── shop-payment/      # Payment handling (COD, status updates)
 ├── shop-product/      # Product and product variant management
+├── shop-review/       # Product reviews (restricted to paid orders)
 ├── shop-user/         # User management
 ├── uploads/           # Static or uploaded resources
 ├── pom.xml            # Parent Maven POM

@@ -15,7 +15,7 @@ public class RabbitMQConfig {
 
     public static final String ORDER_EXCHANGE = "order.exchange";
 
-    //shop-exchange
+    //shop-exchange (for payment)
     public static final String SHOP_EXCHANGE = "shop.exchange";
 
     public static final String ORDER_CREATED_QUEUE = "order.created.queue";
@@ -28,6 +28,10 @@ public class RabbitMQConfig {
     public static final String PAYMENT_COMPLETED_ROUTING_KEY = "payment.completed";
 
     public static final String ORDER_CREATED_PAYMENT_QUEUE = "order.created.payment.queue";
+
+    // queue for review
+    public static final String ORDER_PAID_QUEUE = "order.paid.queue";
+    public static final String ORDER_PAID_ROUTING_KEY = "order.paid";
 
     @Bean
     public MessageConverter jsonMessageConverter() {
@@ -82,7 +86,6 @@ public class RabbitMQConfig {
                 .to(orderExchange).with("order.verified");
     }
 
-
     @Bean
     public DirectExchange shopExchange() {
         return new DirectExchange(SHOP_EXCHANGE);
@@ -113,6 +116,20 @@ public class RabbitMQConfig {
                 .to(orderExchange)
                 .with("order.created");
     }
+
+    // ---- Review ----
+    @Bean
+    public Queue orderPaidQueue() {
+        return new Queue(ORDER_PAID_QUEUE, true);
+    }
+
+    @Bean
+    public Binding bindingOrderPaid(
+            @Qualifier("orderExchange")DirectExchange orderExchange,
+            @Qualifier("orderPaidQueue")Queue orderPaidQueue) {
+        return BindingBuilder.bind(orderPaidQueue).to(orderExchange).with(ORDER_PAID_ROUTING_KEY);
+    }
+
 
 
 }

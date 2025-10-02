@@ -94,6 +94,29 @@ public class OrderService {
                 .orElseThrow(() -> new RuntimeException("Order not found"));
         order.setStatus(OrderStatus.PAID);
         orderRepository.save(order);
+
+
+        // build lại itemEvents từ order
+        List<OrderItemEvent> itemEvents = order.getItems().stream()
+                .map(i -> OrderItemEvent.builder()
+                        .variantId(i.getVariantId())
+                        .quantity(i.getQuantity())
+                        .price(i.getPrice())
+                        .build())
+                .collect(Collectors.toList());
+
+        // publish event reuse OrderCreatedEvent. Notify that this user can review their order
+        rabbitTemplate.convertAndSend(
+                RabbitMQConfig.ORDER_EXCHANGE,
+                RabbitMQConfig.ORDER_PAID_ROUTING_KEY,
+                new OrderCreatedEvent(
+                        order.getId(),
+                        itemEvents,
+                        order.getUserId(),
+                        order.getTotalPrice()
+                )
+        );
+
     }
 
 
