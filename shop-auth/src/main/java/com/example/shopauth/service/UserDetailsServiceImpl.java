@@ -1,7 +1,5 @@
 package com.example.shopauth.service;
 
-// src/main/java/com/example/shopauth/service/UserDetailsServiceImpl.java
-
 import com.example.shopuser.entity.User;
 import com.example.shopuser.repository.UserRepository;
 import lombok.RequiredArgsConstructor;

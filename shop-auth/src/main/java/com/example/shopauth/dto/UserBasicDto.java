@@ -1,7 +1,5 @@
 package com.example.shopauth.dto;
 
-
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 

@@ -1,4 +1,3 @@
-// src/main/java/com/example/shopauth/service/JwtService.java
 package com.example.shopauth.service;
 
 import io.jsonwebtoken.Claims;

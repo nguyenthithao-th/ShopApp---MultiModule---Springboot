@@ -1,7 +1,5 @@
 package com.example.shopauth.dto;
 
-// src/main/java/com/example/shopauth/dto/AuthResponse.java
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

@@ -1,8 +1,5 @@
 package com.example.shopauth.dto;
 
-// src/main/java/com/example/shopauth/dto/LoginRequest.java
-
-
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
